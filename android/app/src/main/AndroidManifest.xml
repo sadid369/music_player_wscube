@@ -2,7 +2,7 @@
     package="com.example.music_player_wscube">
      <uses-permission android:name="android.permission.INTERNET"/>
    <application
-   android:usesCleartextTraffic="true"
+   
         android:label="music_player_wscube"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

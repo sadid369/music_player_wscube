@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_wscube/home_page.dart';
+import 'package:music_player_wscube/music_page.dart';
 
 void main() {
   runApp(const MyApp());

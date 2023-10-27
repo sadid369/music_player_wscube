@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         } else if (event.processingState == ProcessingState.ready) {
           isLoading = false;
+          setState(() {});
         }
       });
       player.play();
@@ -43,31 +44,30 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Audio Player'),
-      ),
-      body: Center(
-        child: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        if (player.playing) {
-                          player.pause();
-                        } else {
-                          player.play();
-                        }
-                        setState(() {});
-                      },
-                      child: player.playing
-                          ? Icon(Icons.pause)
-                          : Icon(Icons.play_arrow)),
-                ],
-              ),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Audio Player'),
+        ),
+        body: Center(
+          child: isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Row(
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          if (player.playing) {
+                            player.pause();
+                          } else {
+                            player.play();
+                          }
+                          setState(() {});
+                        },
+                        child: player.playing
+                            ? Icon(Icons.pause)
+                            : Icon(Icons.play_arrow)),
+                  ],
+                ),
+        ));
   }
 }
