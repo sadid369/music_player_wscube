@@ -1,3 +1,4 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -12,7 +13,10 @@ class _HomePageState extends State<HomePage> {
   late AudioPlayer player;
 
   bool isLoading = false;
-  Duration? totalduration = Duration.zero;
+  Duration? totalDuration = Duration.zero;
+  Duration? currentDuration = Duration.zero;
+  Duration? bufferDuration = Duration.zero;
+
   var audioUrl =
       "https://raag.fm/files/mp3/128/Hindi-Singles/24006/Besharam%20Rang%20(Pathaan)%20-%20(Raag.Fm).mp3";
   @override
@@ -24,7 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   void setUpAudio() async {
     try {
-      totalduration = await player.setUrl(audioUrl);
+      totalDuration = await player.setUrl(audioUrl);
       player.playbackEventStream.listen((event) {
         if (event.processingState == ProcessingState.loading) {
           isLoading = true;
@@ -34,6 +38,16 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         }
       });
+      player.positionStream.listen((event) {
+        print(event.inSeconds);
+        currentDuration = event;
+        setState(() {});
+      });
+      player.bufferedPositionStream.listen((event) {
+        bufferDuration = event;
+        setState(() {});
+      });
+
       player.play();
       setState(() {});
     } catch (e) {
@@ -52,21 +66,39 @@ class _HomePageState extends State<HomePage> {
               ? Center(
                   child: CircularProgressIndicator(),
                 )
-              : Row(
-                  children: [
-                    InkWell(
-                        onTap: () {
-                          if (player.playing) {
-                            player.pause();
-                          } else {
-                            player.play();
-                          }
+              : Padding(
+                  padding: const EdgeInsets.all(11.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ProgressBar(
+                        thumbColor: Colors.red,
+                        thumbGlowColor: Colors.red.withOpacity(0.4),
+                        bufferedBarColor: Colors.red.shade200,
+                        progressBarColor: Colors.red,
+                        baseBarColor: Colors.grey,
+                        buffered: bufferDuration,
+                        progress: currentDuration!,
+                        total: totalDuration!,
+                        onSeek: (value) {
+                          player.seek(value);
                           setState(() {});
                         },
-                        child: player.playing
-                            ? Icon(Icons.pause)
-                            : Icon(Icons.play_arrow)),
-                  ],
+                      ),
+                      InkWell(
+                          onTap: () {
+                            if (player.playing) {
+                              player.pause();
+                            } else {
+                              player.play();
+                            }
+                            setState(() {});
+                          },
+                          child: player.playing
+                              ? Icon(Icons.pause)
+                              : Icon(Icons.play_arrow)),
+                    ],
+                  ),
                 ),
         ));
   }
