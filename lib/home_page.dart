@@ -10,6 +10,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<String> audioUrlList = [
+    "https://raag.fm/files/mp3/128/Hindi/24451/Nouka%20Doobi%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Roshni%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Zara%20Hat%20Ke%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Nouka%20Doobi%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Roshni%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Zara%20Hat%20Ke%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Nouka%20Doobi%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Roshni%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Zara%20Hat%20Ke%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Nouka%20Doobi%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Roshni%20-%20(Raag.Fm).mp3",
+    "https://raag.fm/files/mp3/128/Hindi/24451/Zara%20Hat%20Ke%20-%20(Raag.Fm).mp3",
+  ];
   late AudioPlayer player;
 
   bool isLoading = false;
@@ -23,10 +37,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     player = AudioPlayer();
-    setUpAudio();
+    setUpAudio(audioUrlList[0]);
   }
 
-  void setUpAudio() async {
+  void setUpAudio(String audioUrl) async {
     try {
       totalDuration = await player.setUrl(audioUrl);
       player.playbackEventStream.listen((event) {
@@ -71,6 +85,26 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Expanded(
+                          child: ListView.builder(
+                        itemCount: audioUrlList.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              onTap: () {
+                                setUpAudio(audioUrlList[index]);
+                              },
+                              leading: Container(
+                                height: 35,
+                                width: 35,
+                                child: Image.asset(
+                                    "assets/images/Lost-Movie-Shreya-Ghoshal.jpg"),
+                              ),
+                              title: Text("Song- $index"),
+                            ),
+                          );
+                        },
+                      )),
                       ProgressBar(
                         thumbColor: Colors.red,
                         thumbGlowColor: Colors.red.withOpacity(0.4),
